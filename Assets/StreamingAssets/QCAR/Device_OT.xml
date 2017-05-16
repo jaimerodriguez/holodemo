@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="QCAR_Dataset_config.xsd">
+  <Tracking>
+    <ObjectTarget name="bb82" />
+    <ObjectTarget name="yoda6" />
+    <ObjectTarget name="yoda3" />
+    <ObjectTarget name="rubiks" />
+  </Tracking>
+</QCARConfig>
