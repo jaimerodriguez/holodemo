@@ -1,4 +1,4 @@
-﻿#define FAKESCAN   
+﻿//#define FAKESCAN   
 
 // NOTE: Temporarily FAKESCAN if you don't have the "yoda toys" that object scanner finds. 
 // NOTE: We will soon replace it for an image scan to make this demo more portable.. 
@@ -65,6 +65,10 @@ public class SceneManager : MonoBehaviour
                 ObjectTrackingReticle.GetComponent<Renderer>().material = material;
             }                               
             Acknowledge();
+        }
+        if ( go.name == "Vuforia_Image_Yoda")
+        {
+            ActivateYoda(); 
         }
     }
 
