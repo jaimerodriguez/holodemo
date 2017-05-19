@@ -48,10 +48,10 @@ Cursor code is in SimplestCursor.cs script.
 	1. If you are using image recognition, just look (through HoloLens) at the image you printed earlier. Within a couple seconds it should be recognized.  
 	2. If you don't have a prop (image or object), use the *"Laser"* voice command with FAKESCAN defined (see setup).  
 
-           Note: to hide the laser when done, just say *"Laser"* again. 
+           Note: to hide the laser, just say *"Laser"* again. 
 3. See Yoda appear. Walk to it,and around it (to show its three-dimensionality). This is just another free FBX. Emphasize the untethered aspect of HoloLens.  You are likely 6m away from where you started, walking around the yoda.
 4. Use the *"Toggle Scan"* voice command to start scanning the floor & walls.  
-
+ 
    [You should hear the 'ding' accepting the command but nothing changes visually]. 
 5. Use the *"Toggle Renderer"* voice command to show how HoloLens is mapping the walls and floors. The renderer command will show the  meshes the spatial mapping component is finding.
    You can call Toggle Renderer whenever to toggle (show/hide)these meshes. I like to show them then hiding during next part of the demo.  
@@ -66,64 +66,52 @@ Cursor code is in SimplestCursor.cs script.
 That is it. In just a few  minutes you demonstrated the convergence of digital and physical objects in mixed reality, voice and gestures in  HoloLens, and the benefits of an untethered MR device. 
 
 
-##Preparation/Setup for the demo. 
+## Preparation/Setup for the demo. 
 
 1. Setup HoloLens'  Mixed Reality Capture for Live Preview'. Use this so audience sees what you see.
 2. Pre-position the BB8, and the Yoda model in the unity scene. Here are a few tips: 
-	1. When HoloLens app comes up, you should be looking forward (usually towards the audience) at your height. 
+	1. When HoloLens app comes up, it will establish your origin (0,0,0), so you should be wearing HoloLens and looking forward (usually towards the audience). 
 	2. You want the BB8 to be some where that it can walk laterally towards your podium (or desk) and collided with something physical. Here is default position for BB8: 
-		1. X=4 ( 4 meters to your right), Y = 1 (floating in space so we can demo gravity), and Z = 0 or Z < 1 (no depth from where you are at).  The 4 meters was selected so you can walk towards BB8 and walk around it at < 5 meters, which is further than any roomscale VR that is tethered. 
-	3. You want the Yoda some where near the BB8 so it is clear it appears in the scene (X = 5 is 5 meters to your right). You also want it floating in space ( so 1<Y<2 ) so you can show gravity.  Z (deep can still be 0, or a bit behind BB8, so -1<Z<0).
+		1. X=4 ( 4 meters to your right), Y = 1 (floating in space so we can demo gravity later), and Z = 0 or Z < 1 (no depth from where you are at, or a little in front).  The 4 meters was selected so you can walk towards BB8 and walk around it at < 5 meters, which is further than any roomscale VR that is tethered. 
+	3. You want the Yoda some where near the BB8 so it is clear when it appears in the scene (X = 5 is 5 meters to your right). You also want it floating in space (so 1<Y<2 ) so you can show gravity.  Z (deep can still be 0, or a bit behind BB8, so -1<Z<0).
 	4. If you are using image recognition w/ Vuforia, print the "YodaStretched.jpg" in the 3rdParty/Vuforia_Database folder). Print this w/ color in 8.5"x11" page. 
-	5. If you are not using Vuforia, tweak the #define FAKESCAN in line 0 in scene manager, and just use the "Toggle Laser" command -which was designed for when scanning 3D objects -. With FAKESCAN defined, within a few seconds of you toggling, it will act as if some object had been recognized. 
-
+	5. If you are not using Vuforia, tweak the #define FAKESCAN in line 0 in scene manager, and just use the "Toggle Laser" command -which was designed for when scanning 3D objects -. 
+	   With FAKESCAN defined, within a few seconds of you toggling the "Laser", it will act as if some object had been recognized and Yoda Hologram will appear.  
 
  
-#Building the demo to showcase developers features 
+# Building the demo to showcase developers features 
 
-The following steps outline every step in building the demo from scratch. You can have a few of the steps "pre-configured" to not bore your audience too much.  
+To avoid boring your audience with tiny details, use a pre-configured project in the "startup" branch of this repo. 
 
-You can see a pre-configured project in the "short" branch of this repo. That setup takes care of:  
+That setup takes care of:  
 1. Setting up Vuforia 
 2. Importing the models into the project, but not into the scene.  
 3. Importing the scripts. You should still explain them, but no need to drag them in. 
+4. Importing all audio, materials, assets & prefabs. 
 
 
-The following steps are useful for developers to see, so they understand how easy it is to build this scene.  
-2. Adding the holograms to the scene.  Add one of the holograms. Show them it is a standard 3d model.  
-=======
+The steps that are useful for developers to understand (and see) how easy it is to build this scene are:   
+1. Adding the objects to the scene.  Add one of the holograms. Show them it is a standard 3d model. Nothing special. 
+2. Adding SpatialMapping. It is a simple Create Empty Game object. Add the two components:  SpatialMappingCollider, SpatialMapping Renderer.
+3. Adding voice commands. You can just add the SceneManager script and walk audience through it. 
+4. Cursor. Just add the SimplestCursor script and walk them through it. 
+5. Gestures. Just add TapListener and walk them through it. 
 
-#Building the demo to showcase developers features 
-
-The following steps outline every step in building the demo from scratch. You can have a few of the steps "pre-configured" to not bore your audience too much. 
-
-I suggest the following steps be pre-configured:
-1. Setting up Vuforia 
-2. Importing the models 
-3. 
-
-The following steps are useful for developers to understand (and see) how easy it is to build this scene.  
-2. Adding the objects to the scene.  Add one of the holograms. Show them it is a standard 3d model. Nothing special. 
-3. Adding SpatialMapping. It is a simple Create Empty Game object. Add the two components:  SpatialMappingCollider, SpatialMapping Renderer.
-2. Adding voice commands. You can just add the SceneManager script and walk audience through it. 
-3. Cursor. Just add the SimplestCursor script and walk them through it. 
-4. Gestures. Just add TapListener and walk them through it. 
-
+Each of these steps is detailed thoroughly below.  Some basic familiarity with Unity is required. 
 
 
 ## Step-by Step building script
 
-### Creating the project 
+### Creating the project (Skip this step if using startup branch) 
 1. Create a new project in Unity. Make sure you are using Unity 5.6 or later.  
 	1. Name does not matter. Make it a 3D project. You do not need Unity analytics so feel free to 'disable' that option.  
 
  
-###Setting up Vuforia 
+### Setting up Vuforia (Skip this section if using startup branch) 
 2. Import the Vuforia SDK into Unity.  Here are the detailed steps: 
 	1. Downloading the Unity SDK from https://developer.vuforia.com/downloads/sdk  
 	2. Import the Vuforia SDK 
 		1. In Unity, go to *Assets-> Import Package-> Custom Package*
- 
 		1. Select the **Vuforia<version>.UnityPackage** you downloaded, then click **Open**
 		2. On the Import dialog that comes up, you can ensure everything is selected and just click **Import** to import everything; or, you could also be selective and exclude iOS/Android files by unchecking these within the plugins folder. 
 		3. If you get a warning asking you to allow Unity to "Upgrade your scripts so they don't reference obsolete APIs" then **click "I made a backup, go Ahead"**. 
@@ -133,25 +121,24 @@ The following steps are useful for developers to understand (and see) how easy i
 	2. Click **Import** in the Import Dialog to import all the assets.  This should import assets to the Streaming Assets folder and the Editor/QCAR folder. 
 
 
-1. Configure your Vuforia Key. 
-		1. In the Vuforia menu, go to configuration. 
-		2. In the App License Key, enter your license key obtained from Vuforia's license manager (https://developer.vuforia.com/targetmanager/licenseManager/licenseListing).  
+1. Configure your Vuforia Key (Not needed with startup branch)
+	1. In the Vuforia menu, go to configuration. 
+	2. In the App License Key, enter your license key obtained from Vuforia's license manager (https://developer.vuforia.com/targetmanager/licenseManager/licenseListing).  
 
 The license is 'free' for testing/demo purposes, but it is restricted to 1000 recognitions per month, and a limited number of targets & VuMarks.  
 
- 
 
 1. Configure Vuforia default settings in property Inspector: 
-		1. Max simultaneous tracked Images = 2 
-		2. Max simultaneous tracked Objects = 2
-		3. Digital EyeWear - Type = Optical See-Through 
-		4. Digital Eyewear See Through Config = HoloLens 
-		5. Load YodaImages Database = Checked
-		6. Activate Database = Checked 
-		7. Enable Video Background = Unchecked 
-		8. Webcam -> Disable Vuforia Play Mode  = Checked 
-		9. Overflow Geometry = Stencil (already the default) 
-		10. Matte Shader = Clipping mask ( already the default)
+	1. Max simultaneous tracked Images = 2 
+	2. Max simultaneous tracked Objects = 2
+	3. Digital EyeWear - Type = Optical See-Through 
+	4. Digital Eyewear See Through Config = HoloLens 
+	5. Load YodaImages Database = Checked
+	6. Activate Database = Checked 
+	7. Enable Video Background = Unchecked 
+	8. Webcam -> Disable Vuforia Play Mode  = Checked 
+	9. Overflow Geometry = Stencil (already the default) 
+	10. Matte Shader = Clipping mask ( already the default)
  
 
 
