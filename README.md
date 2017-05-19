@@ -20,46 +20,55 @@ You can see a (very rough) recording of this demo here.
 2. Position the BB8, and the Yoda model in the unity scene. Here are a few tips: 
 	1. When HoloLens app comes up, you should be looking forward (usually towards the audience) at your height. 
 	2. You want the BB8 to be some where that it can walk laterally towards your podium (or desk) and collided with something physical. Here is default position for BB8: 
-	X=4 ( 4 meters to your right), Y = 1 (floating in space so we can demo gravity), and Z = 0 or Z < 1 (no depth from where you are standing so audience can see holograms as they see you).  
-The 4 meters was selected so you can walk towards BB8 and walk around it at ~5 meters, which is further than any roomscale VR that is tethered. This is a unique HoloLens feature you should highlight. 
+	X=4 ( 4 meters to your right), Y = 1 (floating in space so we can demo gravity), and Z = 0 or Z < 1 (no depth from where you are standing so audience can see holograms as they see you).  The 4 meters was selected so you can walk towards BB8 and walk around it at ~5 meters, which is further than any roomscale VR that is tethered. This is a unique HoloLens feature you should highlight. 
 	3. You want the Yoda some where near the BB8 so it is clear when it appears in the scene. 
 X = 5  (5 meters to your right); floating in space (1<Y<2) so you can show gravity but not hit ceiling; Z = 0 (deep can still be 0, or a bit behind BB8, so -1<Z<0).
 
 	4. If you are using image recognition w/ Vuforia, print the "YodaStretched.jpg" (included in the 3rdParty/Vuforia_Database folder). Print this w/ color in 8.5"x11" page. 
 
-	5. If you are not using Vuforia, uncomment out the #define FAKESCAN in line 0 in HoloLensDemo/Scripts/SceneManager.cs, and use the "Toggle Laser" command -which was designed for when scanning 3D objects-. With FAKESCAN defined, within a few seconds of you toggling the laser, it will act as if some object had been recognized and the rest of the workflow will trigger. 
+	5. If you are not using Vuforia, uncomment out the #define FAKESCAN in line 0 in HoloLensDemo/Scripts/SceneManager.cs, and use the *"Toggle Laser"* command -which was designed for when recognizing objects, as shown in the demo video-.
+	
+	   With FAKESCAN defined, within a few seconds of you toggling the laser, it will act as if some object had been recognized and the rest of the workflow will trigger. This removes the need for a print out or a 3D object. 
 
 
-## Exporting Unity project to Visual Studio 
-
-## Commands within the app & outline for a demo
+## Commands within the app & outline (aka The DEMO SCRIPT) 
 
 1. Launch the app. 
-2. Explain the cursor. It is your gaze. HoloLens sensors are doing all the tracking, and cursor uses Unity's RayCast to detect collisions. Cursor is blue when it does not collide with anything and green when it collides with something. When it collides with something, it positions itself at same depth than object it collided with, so you might see cursor increase/decrease in size. When it is not colliding with anything, we position it at 1.5m in direction you are gazing. 
-Cursor code is in SimplestCursor.cs script. Do explain that HoloToolkit has better cursors with stabilization. This simple one is for illustrative purposes only.   
+2. Explain the cursor. It is your gaze. HoloLens sensors are doing all the tracking, and cursor is just positioned in the forward direction. The cursor uses Unity's RayCast to detect collisions. 
+
+   Cursor is blue when it does not collide with anything and green when it collides with something. When it collides with something, it positions itself at same depth than object it collided with, so you might see cursor increase/decrease in size. When it is not colliding with anything, we position it at 1.5m in direction you are gazing. 
+Cursor code is in SimplestCursor.cs script. 
+
+   Do explain that HoloToolkit has better cursors with stabilization. This simple one is for illustrative purposes only.   
 
 2. Look around the room, and have your cursor collide with the BB8 model. 
-3. Show the BB8 model. This is a standard, free fbx.  Nothing special, a hologram is just any 3D object in Unity. 
+3. Show the BB8 model. Explain is a standard, free3D model (fbx format).  Nothing special, a hologram is just any 3D object in Unity. 
+4. Show that there is no Yoda next to the BB8. We will summon the Yoda with Vuforia.  
+5. Recognizing an object w/ Vuforia to summon the Yoda. 
+	1. If you are using image recognition, just look (through HoloLens) at the image you printed earlier. Within a couple seconds it should be recognized.  
+	2. If you don't have a prop (image or object), use the *"Laser"* voice command with FAKESCAN defined (see setup).  
 
-4. Show that there is no Yoda next to the BB8. We will summon the Yoda w/ Vuforia.  
-5. Scanning an object w/ Vuforia to summon the Yoda. 
-	1. If you are using image recognition, scan the image you printed earlier by just looking at it. 
-	2. If you don't have a prop (image or object), use the *"Laser"* voice command with FAKESCAN defined (see setup).  Note: to hide the laser when done, just say "Laser" again. 
-3. See Yoda appear. Walk to it, look around it. Just another free FBX. Emphasize the untethered aspect of HoloLens.  
-4. Use the *"Toggle Scan"* voice command to start scanning the floor & walls. 
-5. Use the *"Toggle Renderer"* voice command to show how HoloLens is scanning and the meshes it is finding.
-You can call Toggle Renderer whenever to toggle these meshes. I like to show them then hiding during walk part of the demo (next steps).  
-6. Once you know enough of the floor has been scannned (so your holograms don't fall through) use the *"Gravity"* command to turn on gravity on your holograms. See them fall and collide with the floor. If they fall and are not standing up, tap them, this marks them as selected, and resets their transform.     
-7. Tap on the BB8 to select it, showing the hand gesture of "Tap". Script is in TapListener.cs 
-8. With BB8 selected, use the *"Walk"* command and see it animate around the scanned floor. Emphasize this is all free due to Spatial mapping. 
-9. Repeat the "walk" command until BB8 hits something physical and collides with it.
+           Note: to hide the laser when done, just say *"Laser"* again. 
+3. See Yoda appear. Walk to it,and around it (to show its three-dimensionality). This is just another free FBX. Emphasize the untethered aspect of HoloLens.  You are likely 6m away from where you started, walking around the yoda.
+4. Use the *"Toggle Scan"* voice command to start scanning the floor & walls.  
+
+   [You should hear the 'ding' accepting the command but nothing changes visually]. 
+5. Use the *"Toggle Renderer"* voice command to show how HoloLens is mapping the walls and floors. The renderer command will show the  meshes the spatial mapping component is finding.
+   You can call Toggle Renderer whenever to toggle (show/hide)these meshes. I like to show them then hiding during next part of the demo.  
+6. Once you know that enough of the floor has been mapped (so your holograms don't fall through) use the *"Gravity"* command to turn on gravity on your holograms. See them fall and collide with the floor. If they fall and are not standing up, tap them, this marks them as selected, and resets their transform (making them stand-up).     
+7. Tap on the BB8 to select it, showing the hand gesture of "Tap". Script to handle Tap is in TapListener.cs. 
+8. With BB8 selected, use the *"Walk"* voice command and see it animate around the floor. Explain how this is all free (we don't have to write code) due to Spatial mapping and Unity collision. 
+9. Repeat the *"Walk"* command until BB8 hits something physical and collides with it. You just had a virtual hologram collide with a physical object!! 
 10. If BB8 falls over, when it collides, "Tap it" to have it stand-up.  
-11. Give the "Toggle Scan" command, which will turn-off Unity's spatial mapping, making the floor mesh disappear. With this command, our holograms will disappear into abyss.  That is spatial mapping in action. 
+11. [Optional]. If there is walls around you, have the BB8 walk past a wall. Notice how it literally disappears from the scene. Unity occludes it, the way a physical wall would in real life. 
+11. Give the "Toggle Scan" command, which will turn-off Unity's spatial mapping, making the floor mesh disappear. With this command, our holograms will disappear into abyss.  That is spatial mapping in action.
+
+That is it. In just a few  minutes you demonstrated the convergence of digital and physical objects in mixed reality, voice and gestures in  HoloLens, and the benefits of an untethered MR device. 
 
 
-##Preparation/Setup 
+##Preparation/Setup for the demo. 
 
-1. Setup HoloLens'  Mixed Reality Capture for Live Preview. 
+1. Setup HoloLens'  Mixed Reality Capture for Live Preview'. Use this so audience sees what you see.
 2. Pre-position the BB8, and the Yoda model in the unity scene. Here are a few tips: 
 	1. When HoloLens app comes up, you should be looking forward (usually towards the audience) at your height. 
 	2. You want the BB8 to be some where that it can walk laterally towards your podium (or desk) and collided with something physical. Here is default position for BB8: 
