@@ -4,32 +4,31 @@ This is a brief demonstrator/script for showing HoloLens to a developer audience
 
 It builds a scene from scratch (within a few minutes) and demonstrates:
 - How to quickly create a gaze cursor (and all head tracking that get for free w/ HoloLens camera and Unity).  
-- Voice commands in HoloLens.   
-- How to add Spatial Mapping to a scene. Demonstrating how you get occlusion and collision detection for free.  
-- Object or Image Recognition using Vuforia.
+- Adding & Handling Voice commands in HoloLens.   
+- Adding Spatial Mapping to a scene. Demonstrating how you get occlusion and collision detection for free with Unity.   
+- Object and/or Image Recognition using Vuforia.
 
 You can see a (very rough) recording of this demo here. 
 
-
 # Showing the demo 
+
 
 ## Preparation/Setup 
 
-1. Setup HoloLens'  [Mixed Reality Capture](https://developer.microsoft.com/en-us/windows/mixed-reality/mixed_reality_capture) for Live Preview.  I recommend you do it from the [Windows device portal](https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_windows_device_portal)
+1. Setup HoloLens'  [Mixed Reality Capture](https://developer.microsoft.com/en-us/windows/mixed-reality/mixed_reality_capture) for Live Preview.  I recommend you do it from the [Windows device portal](https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_windows_device_portal). 
 
 2. Position the BB8, and the Yoda model in the unity scene. Here are a few tips: 
 	1. When HoloLens app comes up, you should be looking forward (usually towards the audience) at your height. 
 	2. You want the BB8 to be some where that it can walk laterally towards your podium (or desk) and collided with something physical. Here is default position for BB8: 
-		1. X=4 ( 4 meters to your right), Y = 1 (floating in space so we can demo gravity), and Z = 0 or Z < 1 (no depth from where you are standing so audience can see holograms as they see you).  
+	X=4 ( 4 meters to your right), Y = 1 (floating in space so we can demo gravity), and Z = 0 or Z < 1 (no depth from where you are standing so audience can see holograms as they see you).  
 The 4 meters was selected so you can walk towards BB8 and walk around it at ~5 meters, which is further than any roomscale VR that is tethered. This is a unique HoloLens feature you should highlight. 
- 
 	3. You want the Yoda some where near the BB8 so it is clear when it appears in the scene. 
 X = 5  (5 meters to your right); floating in space (1<Y<2) so you can show gravity but not hit ceiling; Z = 0 (deep can still be 0, or a bit behind BB8, so -1<Z<0).
 
-	4. If you are using image recognition w/ Vuforia, print the "YodaStretched.jpg" in the 3rdParty/Vuforia_Database folder). Print this w/ color in 8.5"x11" page. 
+	4. If you are using image recognition w/ Vuforia, print the "YodaStretched.jpg" (included in the 3rdParty/Vuforia_Database folder). Print this w/ color in 8.5"x11" page. 
 
-	5. If you are not using Vuforia, remove the // that comments out the #define FAKESCAN in line 0 in 
-HoloLensDemo/Scripts/SceneManager.cs, and use the "Toggle Laser" command -which was designed for when scanning 3D objects-. With FAKESCAN defined, within a few seconds of you toggling the laser, it will act as if some object had been recognized and the rest of the workflow will trigger. 
+	5. If you are not using Vuforia, uncomment out the #define FAKESCAN in line 0 in HoloLensDemo/Scripts/SceneManager.cs, and use the "Toggle Laser" command -which was designed for when scanning 3D objects-. With FAKESCAN defined, within a few seconds of you toggling the laser, it will act as if some object had been recognized and the rest of the workflow will trigger. 
+
 
 ## Exporting Unity project to Visual Studio 
 
