@@ -72,7 +72,7 @@ That is it. In just a few  minutes you demonstrated the convergence of digital a
 
 To avoid boring your audience with tiny details, use a pre-configured project in the "startup" branch of this repo. 
 
-Tha setup takes care of:  
+The setup completed in startup branch takes care of:  
 1. Setting up Vuforia 
 2. Importing the models, audio, materials & prefabs assets into the project, but not into the scene.  
 3. Importing the scripts. You should still explain them, but no need to drag them in or type them.  
@@ -102,7 +102,8 @@ Each of these steps is detailed thoroughly below.  Some basic familiarity with U
 		1. Select the **Vuforia<version>.UnityPackage** you downloaded, then click **Open**
 		2. On the Import dialog that comes up, you can ensure everything is selected and just click **Import** to import everything; or, you could also be selective and exclude iOS/Android files by unchecking these within the plugins folder. 
 		3. If you get a warning asking you to allow Unity to "Upgrade your scripts so they don't reference obsolete APIs" then **click "I made a backup, go Ahead"**. 
-1. Import your Vuforia Assets database
+1. Import your Vuforia Assets database.
+
 	Note: If you want to use the one included with this demo, it is in the 3rdParty folder at the root of this repo. 
 	1. Go to *Assets->Import Package->Custom Package*. Select **YodaImages.UnityPackage** to import the images database. 
 	2. Click **Import** in the Import Dialog to import all the assets.  This should import all Vuforia assets to the *Streaming Assets* folder and the *Editor/QCAR* folder. 
@@ -129,7 +130,7 @@ The license is 'free' for testing/demo purposes, but it is restricted to 1000 re
  
 
 ### Creating our HoloLensDemo folder
-When I originally built the demo, i created everything inside a **HoloLensDemo** folder. This helps me keep my objects separate from all the Vuforia assets. This step is optional, but most steps below that bring assets into the project will recommend you do it into that folder, so either create this folder for consistency, or please reinterpret instructions below and copy then to *Assets *folder wherever it says *Assets/HoloLensDemo*. 
+When I originally built the demo, i created everything inside a **HoloLensDemo** folder. This helps keep our assets separate from all the Vuforia assets. This step is optional, but most steps below that bring assets into the project will recommend you do it into that folder, so either create this folder for consistency, or please reinterpret instructions below and copy then to *Assets *folder wherever it says *Assets/HoloLensDemo*. 
 1.- Create HoloLensDemo in Unity project's *Assets* folder. 
 
 ### Importing our models and assets into the project (not needed when using Startup Branch). 
@@ -139,7 +140,7 @@ When I originally built the demo, i created everything inside a **HoloLensDemo**
 4. Add three  Materials (created with Standard shader). Call them Red, Green, Blue. Set the Albedo accordingly so the name of each material matches its albedo. 
 4. Copy the *3rdParty/Scripts* folder into our *Assets/HoloLensDemo* folder in Unity. This will bring all our scripts, which we will use and explain in the latter sections 
 	
-### Creating our startup scene
+### Creating our startup scene (not needed when using startup branch). 
 1. Save your Scene into a new folder -called **Scenes**- in Unity. Call your scene *"main"* 
 2. Configure the Main Camera as a HoloLens camera: 
 	1.Transform.Position = **0,0,0**
@@ -154,7 +155,7 @@ When I originally built the demo, i created everything inside a **HoloLensDemo**
  
 3. Save scene again. 
 
-### Preparing our scene (FINALLY!! BEGIN HERE WHEN USING STARTUP BRANCH). 
+### Preparing our scene (FINALLY!! **BEGIN HERE WHEN USING STARTUP BRANCH**). 
 
 #### Adding the Vuforia Image Target 
 1. Drag the Vuforia ImageTarget prefab into the scene hierarchy. Call the GameObject added *"Vuforia_Image_Yoda"*. 
@@ -171,26 +172,26 @@ When I originally built the demo, i created everything inside a **HoloLensDemo**
 	2. Position for your stage. Recommendation is: 
 	   Transform.Position = **(4,1,0.5)**, if your room allows, see setup above for explanation. 
        Scale = **.005, 0.005, 0.005**
-	3. Add a RigidBody component to the BB8.
+	3. Add a **RigidBody** component to the BB8.
 		1. Mass = **10** 
 		2. Drag = **0**
 		2. Gravity = **Unchecked**. We will turn this on later from script via voice command. 
 	1. Add a **Box Collider** to the BB8. 
 		1.  Ensure Istrigger is **Unchecked**. 
 		1.  Size **X=180, Y=135, Z=116.1**; //these are so large due to the scale of our free model. 
-	1.  Add a **Demo Interactable**Component to the BB8. This script is what helps us with Tapping the component, and having it walk around the scene. 
+	1.  Add a **Demo Interactable** component to the BB8. This script is what helps us with Tapping the component, and having it walk around the scene. 
 		1.  Tap Force Strength **=10** (the default) 
 	3. Drag the Yoda model into the scene hierarchy. 
  		1. Position it accordingly (see setup above). Recommended is **X=5, Y=1, Z= 0**
 		2. Scale =  **.25,.25, .25** 
 		3. Rotation= **0, -90,0**
 
-	4. Add a **RigidBody **component to Yoda GameObject, so it collides with floor. 
+	4. Add a **RigidBody**component to Yoda GameObject, so it collides with floor. 
  		5. Mass = **60**,  
  		6. Use Gravity = **unchecked** 
 
-	6. Add a **MeshCollider ** component to the Yoda game object
-		6. Convex = **checked **
+	6. Add a **MeshCollider** component to the Yoda game object
+		6. Convex = **checked**
 		7. Mesh =  **Mesh1**.  To find Mesh1: In the Project pane go to *Assets/HololensDemo/Models/Yoda/* and expand the Yoda model. You should see a Mesh1 mesh and a Jedi_Masters_ mesh.Drag Mesh1 to the collider. 
 
 	4. Drag the **Cursor** prefab (in *HololensDemo/Prefabs*) into the scene. 
@@ -207,7 +208,7 @@ This part outlines the scripts that do most of the work. it is little code, but 
     Name is not critical, but I  will refer to it by this name in steps below, so i recommend you use same name.
 	1. Add a **SpatialMappingCollider** component to this object.  
        SpatialMappingCollider is a Unity component; it will allow us to collide with objects that HoloLens 'scans' using Spatial Mapping. 
-       Leave all the defaults for the object. Ensure "Enable collisions" is checked.
+       Leave all the defaults for the object. Ensure *"Enable collisions"* is **checked**.
 	2. Add a **SpatialMappingRenderer** component to our SpatialMappingManager. 
      This again is a Unity component. This will render meshes as the room is getting scanned, giving us a visual indicator of the spatial mapping coverage. 
 	
@@ -224,7 +225,7 @@ SceneManager has most of our logic. It is centralized in one place to make it ea
 	3. Element 1 == **Yoda**.  Drag Yoda GameObject from scene hierarchy. 
 	5. Cursor == **Cursor**. Drag Cursor GameObject from scene hierarchy to this property. We use this reference to hide/show cursor when laser is on.   
 
-1. Add an **AudioSource **component to our SceneManager GameObject.  
+1. Add an **AudioSource** component to our SceneManager GameObject.  
 We will use this to play a sound for the demoer (you!) when a voice command is interpreted and handled. 
 It prevents you from having to repeat commands unnecessarily (or having the repeats conflict w/ each other). 
 Set the following properties in our AudioSource:    
@@ -243,7 +244,7 @@ We added our *Vuforia_Image_Yoda* into the scene earlier, but here we get to con
 
 3. Add a  **VuforiaTrackingBehavior** component to the *Vuforia_Image_Yoda* GameObject. 
    This script does two things: 
-	1. When an object (our image) is recognized by Vuforia, this script calls its **OnTrackingFound() ** method, which in-turn calls **SceneManager.Instance.VuforiaObjectDetected() **which lets our SceneManager know it needs to do the work (to show our Yoda, hide laser, etc.) 
+	1. When an object (our image) is recognized by Vuforia, this script calls its **OnTrackingFound()** method, which in-turn calls **SceneManager.Instance.VuforiaObjectDetected()** which lets our SceneManager know it needs to do the work (to show our Yoda, hide laser, etc.) 
 
 	2. The script takes some visual cues that are mostly aimed at demoing it in "laser mode". Such that when an object is identified we change the Highlight color of that object so user knows we found it].   
 To configure these cues, set the following properties in the VuforiaTargetBehavior component: 
