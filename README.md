@@ -12,7 +12,6 @@ You can see a (very rough) recording of this demo here.
 
 # Showing the demo 
 
-
 ## Preparation/Setup 
 
 1. Setup HoloLens'  [Mixed Reality Capture](https://developer.microsoft.com/en-us/windows/mixed-reality/mixed_reality_capture) for Live Preview.  I recommend you do it from the [Windows device portal](https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_windows_device_portal). 
@@ -100,7 +99,7 @@ The steps that are useful for developers to understand (and see) how easy it is 
 Each of these steps is detailed thoroughly below.  Some basic familiarity with Unity is required. 
 
 
-## Step-by Step building script
+## Step-by Step script for creating the demo
 
 ### Creating the project (Skip this step if using startup branch) 
 1. Create a new project in Unity. Make sure you are using Unity 5.6 or later.  
@@ -142,19 +141,29 @@ The license is 'free' for testing/demo purposes, but it is restricted to 1000 re
  
 
 
-### Preparing our scene
-
-
-1. Drag the Vuforia ImageTarget prefab into the scene hierarchy. Call it "Vuforia_Image_Yoda". Configure the following properties in the inspector: 
-	1. Type = Predefined 
-	2. Database = YodaImages 
-	3. ImageTarget = Yoda Stretched 
-	4. Leave width and height untouched ( 0.28 width = 11 inches for printed paper). 
+### Importing our models and assets into the project (not needed when using Startup Branch). 
+1. Drag & Drop the *3rdParty/Models* folder into the *Assets* folder in Unity. [Ending up with a hierarchy of Assets/Models/BB8, Assets/Models/Yoda, Assets/Models/Cursor]
+2. Copy the *3rdParty/Sounds* folder onto the *Assets* folder in Unity. 
+3. Create a folder in Unity called *Materials* and add three  Materials (created with Standard shader). Call them Red, Green, Blue. Set the Albedo accordingly so the name of each material matches its albedo. 
+4. Copy the *3rdParty/Scripts* folder into our Assets folder in Unity. This will bring all our scripts, which we will use and explain in the latter sections 
 	
+### Creat 
+1. Save your Scene into a new folder -called **Scenes**- in Unity. Call your scene *"main"* 
+2. Configure the Main Camera as a HoloLens camera: 
+	1.Transform.Position = **0,0,0**
+	2.Clear Flags = **Solid Color**
+	3. Background = Black = RGBA (0,0,0,255) 
+3. Save scene again. 
 
-1. Importing our models into the project. 
-	1. Drag & Drop the *3rdParty/Models* folder into the *Assets* folder in Unity. [Ending up with a hierarchy of Assets/Models/BB8, Assets/Models/Yoda, Assets/Models/Cursor]
 
+### Preparing our scene (BEGIN HERE WHEN USING STARTUP BRANCH). 
+
+1. Drag the Vuforia ImageTarget prefab into the scene hierarchy. Call the GameObject added "Vuforia_Image_Yoda". Configure the following properties in the inspector: 
+	1. Type = **Predefined** 
+	2. Database = **YodaImages** 
+	3. ImageTarget = **YodaStretched** 
+	4. Leave width and height untouched (0.28 width = 11 inches for printed paper). 
+	
 2. Adding our models into the scene. 
 	1. Adding the BB8 
  		2. Drag the BB8 Model into the scene hierarchy. 
