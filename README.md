@@ -147,135 +147,129 @@ The license is 'free' for testing/demo purposes, but it is restricted to 1000 re
 3. Create a folder in Unity called *Materials* and add three  Materials (created with Standard shader). Call them Red, Green, Blue. Set the Albedo accordingly so the name of each material matches its albedo. 
 4. Copy the *3rdParty/Scripts* folder into our Assets folder in Unity. This will bring all our scripts, which we will use and explain in the latter sections 
 	
-### Creat 
+### Creating our startup scene
 1. Save your Scene into a new folder -called **Scenes**- in Unity. Call your scene *"main"* 
 2. Configure the Main Camera as a HoloLens camera: 
 	1.Transform.Position = **0,0,0**
 	2.Clear Flags = **Solid Color**
-	3. Background = Black = RGBA (0,0,0,255) 
+	3. Background = **Black = RGBA (0,0,0,255)**
+4. Add an ARCamera to our scene.  You can drag it from Vuforia/Prefabs/ArCamera.prefab
+   Configure the following properties:
+	1. Transform.Position = **(0,0,0)**
+	2. World Center Mode = **CAMERA**
+	3. Central Anchor Point = **MainCamera**  [Drag our scene's MainCamera here]
+	4. AudioListener = **Unchecked**
+ 
 3. Save scene again. 
 
+### Preparing our scene (FINALLY!! BEGIN HERE WHEN USING STARTUP BRANCH). 
 
-### Preparing our scene (BEGIN HERE WHEN USING STARTUP BRANCH). 
-
-1. Drag the Vuforia ImageTarget prefab into the scene hierarchy. Call the GameObject added "Vuforia_Image_Yoda". Configure the following properties in the inspector: 
+#### Adding the Vuforia Image Target 
+1. Drag the Vuforia ImageTarget prefab into the scene hierarchy. Call the GameObject added *"Vuforia_Image_Yoda"*. 
+   Configure the following properties for this object's ImageTargetBehaviour component 
 	1. Type = **Predefined** 
 	2. Database = **YodaImages** 
 	3. ImageTarget = **YodaStretched** 
 	4. Leave width and height untouched (0.28 width = 11 inches for printed paper). 
 	
-2. Adding our models into the scene. 
-	1. Adding the BB8 
- 		2. Drag the BB8 Model into the scene hierarchy. 
-	 		1. Position for your stage. Recommendation is X=4, Y=1, Z=0.5, if your room allows. 
-	 		2. Scale = .005, 0.005, 0.005
-  
-		3. Add a RigidBody component to the BB8.
-			1. Mass = 10. 
-			2. Gravity = Unchecked ; // we will turn this on later from script via voice command 
 
-		1. Add a Box Collider to the BB8. 
-			1.  Ensure Istrigger is unchecked. 
-			1.  Size X=180, Y=135, Z=116.1 ; //these are so large due to the scale
+#### Adding our models into the scene. 
+1. Adding the BB8 
+	1. Drag the BB8 Model into the scene hierarchy. 
+	2. Position for your stage. Recommendation is: 
+	   Transform.Position = **(4,1,0.5)**, if your room allows, see setup above for explanation. 
+       Scale = **.005, 0.005, 0.005**
+	3. Add a RigidBody component to the BB8.
+		1. Mass = **10** 
+		2. Drag = **0**
+		2. Gravity = **Unchecked**. We will turn this on later from script via voice command. 
+	1. Add a Box Collider to the BB8. 
+		1.  Ensure Istrigger is **Unchecked**. 
+		1.  Size **X=180, Y=135, Z=116.1**; //these are so large due to the scale of our free model. 
 
-		1.  Add a Demo Interactable Component to the BB8.
-			1.  Tap Force Strength = 10 (the default) 
-
-	
+	1.  Add a Demo Interactable Component to the BB8. This script is what helps us with Tapping the component, and having it walk around the scene. 
+		1.  Tap Force Strength = 10 (the default) 
 
 	3. Drag the Yoda model into the scene hierarchy. 
- 		1. Position it accordingly (see setup above). Recommended is X=5, Y=1, Z= 0
-		2. Scale =  .25,.25, .25, 
-		3. Rotation= 0, -90,0
+ 		1. Position it accordingly (see setup above). Recommended is **X=5, Y=1, Z= 0**
+		2. Scale =  **.25,.25, .25** 
+		3. Rotation= **0, -90,0**
 
-	4. Add a rigid body to Yoda so it collides with floor. 
- 		5. Mass =60,  UseGravity = unchecked 
+	4. Add a rigid body to Yoda GameObject, so it collides with floor. 
+ 		5. Mass = **60**,  
+ 		6. Use Gravity = **unchecked** 
 
-	6. Add a Mesh collider to Yoda
-		6. Convex = checked 
-		7. Mesh =  Mesh1.  To find Mesh1: In the Project pane go to Assets/HololensDemo/Models/Yoda/ and expand the Yoda model. You should see a Mesh1 mesh and a Jedi_Masters_ mesh.   
+	6. Add a Mesh collider component to Yoda
+		6. Convex = **checked **
+		7. Mesh =  **Mesh1**.  To find Mesh1: In the Project pane go to *Assets/HololensDemo/Models/Yoda/* and expand the Yoda model. You should see a Mesh1 mesh and a Jedi_Masters_ mesh.Drag Mesh1 to the collider. 
 
-	4. Drag the Cursor Prefab (in HololensDemo/Prefabs) into the scene. The default property values should work.  Confirm they look like this:    
-		1. Transform.Position = 0, 0, 1.5   (1.5 meters in front of us). 
-		2. Transform.Scale X=0.05, Y=0.025, Z=0.05
-		2.  SimplestCursor component is already attached and has a radius of 15 (this is how far we will RayCast, 15 meters in gaze direction), and an On/Off material (Green & Blue respectively). 
-		
+	4. Drag the **Cursor Prefab** (in HololensDemo/Prefabs) into the scene. 
+       The default property values should work.  Confirm they look like this:    
+		1. Transform.Position = **0, 0, 1.5**   (1.5 meters in front of us). 
+		2. Transform.Scale **X=0.05, Y=0.025, Z=0.05**
+		2.  **SimplestCursor **script component is already attached and has a Radius**=15** (this is how far we will RayCast, 15 meters in gaze direction), and an **On/Off material (Green & Blue respectively)**. 
  
 ### Adding the behaviors and scripts to our scene 
 This part outlines the scripts that do most of the work. it is little code, but still worth explaining to developers: 
 
 #### Spatial Mapping 
-1. Create Empty GameObject and add it to scene. Call it *SpatialMappingManager*. Name is not critical, but I  will refer to it by this name in steps below, so i recommend you use same name.
-	1. Add a **SpatialMappingCollider** component to this object.  SpatialMappingCollider is a Unity component; it will allow us to collide with objects that HoloLens 'scans' using Spatial Mapping. Leave all the defaults for the object. Ensure "Enable collisions" is checked.
-	2. Add a **SpatialMappingRenderer** component to our SpatialMappingManager.This again is a Unity component. This will render meshes as the room is getting scanned, giving us a visual indicator of the spatial mapping coverage. 
+1. Create Empty GameObject and add it to scene. Call it *SpatialMappingManager*. 
+    Name is not critical, but I  will refer to it by this name in steps below, so i recommend you use same name.
+	1. Add a **SpatialMappingCollider** component to this object.  
+       SpatialMappingCollider is a Unity component; it will allow us to collide with objects that HoloLens 'scans' using Spatial Mapping. 
+       Leave all the defaults for the object. Ensure "Enable collisions" is checked.
+	2. Add a **SpatialMappingRenderer** component to our SpatialMappingManager. 
+     This again is a Unity component. This will render meshes as the room is getting scanned, giving us a visual indicator of the spatial mapping coverage. 
 	
 That is all we need for spatial mapping. We do not need any code at all. Magic!!
  
-### Scene Manager (that orchestrates our scene) 
+### Add a scene manager (that orchestrates our whole scene) 
 2. Create Empty GameObject in Scene Hierarchy. Call it *SceneManager*. 
-	1.    Add the **SceneManager **script component to our SceneManager GameObject. (Sorry for dupe name).   
-SceneManager has most of our logic. It is centralized in one place to make it easier to demo & tell the story.  In a few cases, this meant coupling other elements in the scene to our manager. Don't take what it does as a 'best practice'; it does make our scene easier to maintain & explain. 
+	1. Add the **SceneManager **script component to our SceneManager GameObject. (Sorry for dupe name).   
+SceneManager has most of our logic. It is centralized in one place to make it easier to demo & tell the story.  In a few cases, this meant coupling other elements in the scene to our manager. Don't take what it does as a best practice; it does make our scene easier to maintain & to explain. 
+3. Configure the SceneManager script component like this: 
+	1. Interactive Elements, Size = **2**. 
+    Interactive Elements list has the objects we want to interact with. For example when you say "Gravity" we enumerate through this collection and turn Gravity on for these Game Objects. 
+	2. Element 0 == **BB8**.   Drag BB8 GameObject from scene hierarchy here. 
+	3. Element 1 == **Yoda**.  Drag Yoda GameObject from scene hierarchy. 
+	5. Cursor == **Cursor**. Drag Cursor GameObject from scene hierarchy to this property. We use this reference to hide/show cursor when laser is on.   
 
-
-Configure the SceneManager script component like this: 
-	2.    Interactive Elements, Size = 2.  
-Interactive Elements list has the objects we want to interact with. For example when you say "Gravity" we enumerate through this collection and turn Gravity on for these Game Objects. 
-	3.    Element 0 == BB8.   Drag BB8 GameObject from scene hierarchy here.  
-	4.    Element 1 == Yoda.  Drag Yoda GameObject from scene hierarchy. 
-
-	5.    Cursor == Cursor. Drag Cursor GameObject from scene hierarchy to this property. 
-We use this reference to hide/show cursor when laser is on.   
-
-1. [Optional] Add an Audio Source component to our SceneManager GameObject.  
+1. Add an Audio Source component to our SceneManager GameObject.  
 We will use this to play a sound for the demoer (you!) when a voice command is interpreted and handled. 
 It prevents you from having to repeat commands unnecessarily (or having the repeats conflict w/ each other). 
 Set the following properties in our AudioSource:    
-	1. Use the "ding" in HoloLensDemo/Sounds folder as the clip.  
-	2. Uncheck the "play on Awake" option.  
-	3. Configure your volumen levels as desired. 
+	1. Use the "**ding**" in HoloLensDemo/Sounds folder as the clip.  
+	2. **Uncheck** the "play on Awake" option.  
+	3. Configure your volume levels as desired. 
 
-4. [Optional]. Add a reticle for our laser as a child of SceneManager.  We are keeping it simple and just using a LineRenderer ( with two points at 0,0,0 and 0,0,1) as a reticle.  The HoloLensDemo/Prefabs folder already has prefab for this, so i recommend you use that. It is not polished but it works.  
+4. [Optional]. Add a reticle for our laser as a child of SceneManager.  We are keeping it simple and just using a LineRenderer (with two points at 0,0,0 and 0,0,1) as a reticle.  
+    The HoloLensDemo/Prefabs folder already has prefab for this, so i recommend you use that. It is not polished but it works.  
 	1. Once you create this GameObject set the **ObjectTrackingReticle** property in our SceneManager script to this GameObject.
 
-  
 ### Configuring our Vuforia Image recognition. 
+We added our *Vuforia_Image_Yoda* into the scene earlier, but here we get to configure it. 
+1. Uncheck (or remove) the **DefaultTrackableEventHandler** script from our *Vuforia_Image_Yoda* GameObject.
+	We won't be using this because by default what Vuforia does when the image is recognized it enables the children of the GameObject.  In our case, we do want to enable our Yoda, but it is not a child of our Vuforia image, so we won't use the default behavior.  We will use the one in this next step. 
 
-2. Uncheck (or remove) the *DefaultTrackableEventHandler* script from our *Vuforia_Image_Yoda*. 
-We won't be using this because by default what Vuforia does when the image is recognized it enables the children of the GameObject.  In our case, we do want to enable our Yoda, but it is not a child of our Vuforia image, so we won't use the default behavior.  We will use the one in this next step. 
-
-3. Add a  *VuforiaTrackingBehavior *component to the *Vuforia_Image_Yoda* we added earlier to our scene. 
-This script does two things: 
-	1. When an object (our image) is recognized by Vuforia, this script calls its **OnTrackingFoundMethod() **which in-turn calls **SceneManager.Instance.VuforiaObjectDetected() **which lets our SceneManager know it needs to do the work (to show our Yoda, hide laser, etc.) 
+3. Add a  **VuforiaTrackingBehavior** component to the *Vuforia_Image_Yoda* GameObject. 
+   This script does two things: 
+	1. When an object (our image) is recognized by Vuforia, this script calls its **OnTrackingFound() ** method, which in-turn calls **SceneManager.Instance.VuforiaObjectDetected() **which lets our SceneManager know it needs to do the work (to show our Yoda, hide laser, etc.) 
 
 	2. The script takes some visual cues that are mostly aimed at demoing it in "laser mode". Such that when an object is identified we change the Highlight color of that object so user knows we found it].   
 To configure these cues, set the following properties in the VuforiaTargetBehavior component: 
-		1. Target Highlight = "Green" [the green matrial in HololensDemo\Resources\Materials folder].  
-		2. Target Normal = "Red"  [Red material, in HololensDemo\Resources\Materials folder]. 
-		3. TargetRenderer = Reticle  [The GameObject we added as a child to SceneManager] 
-		4. Target = Cursor [our Cursor GameObject from the scene].  
-
+		1. Target Highlight = **Green** [the green matrial in HololensDemo\Resources\Materials folder].  
+		2. Target Normal = **Red** [Red material, in HololensDemo\Resources\Materials folder]. 
+		3. TargetRenderer = **Reticle**  [The GameObject we added as a child to SceneManager] 
+		4. Target = **Cursor** [our Cursor GameObject from the scene].  
 
 ### Voice commands 
 6.  Voice Commands are implemented in SceneManager script. Explain the StartVoiceRecognizer method and the KeywordRecognizer_OnPhraseRecognized method. This is all it takes to do voice recognition in HoloLens. 
 
 
-That is it! Now just run the demo & have fun. 
+That is it! Now just run the demo (with the script outlined at the earlier) & have fun. 
 
 
-
-#References:
-=======
-		7. Mesh =  Drag Mesh1 from the Yoda Model to the Mesh property of the collider. 
-
-	4. Drag the Cursor model into the scene.   
-		1. Position = 0, 0, 1.5   (1.5 meters in front of us). Scale cursor to X=0.05, Y=0.025, Z=0.5
-		2.  
- 
-### Adding the behaviours and scripts to our scene 
-
-
-
-
+  
 #Useful references:
 - [Vuforia Image Targets in Unity, Video Tutorial](https://library.vuforia.com/articles/Training/Image-Targets-in-Unity)
 - 
